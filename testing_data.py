@@ -8,39 +8,24 @@ from gensim.test.utils import datapath
 from sklearn.manifold import TSNE
 from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.corpus import stopwords
-# from pre_processing import pre_process
+from pre_processing import pre_process
+from dataset import data_news_keywords, data_news_rank
 
-def test_testing():
-    print('testing')
-    sys.exit()
-
-
-def get_similarities(text):
-    try: 
-        sim_words = model.wv.most_similar(question[0])
-        res = sim_words
-    except Exception as e:
-        res = ''
-    return res
-
-
-def test_data(text, model_name, i):
+# RETURN KEYWORD AND VECTORS FROM QUESTION
+def test_data(text, model_name):
     print("===SEARCH===")
-    print(text[i])
-    words = []
-    for t in text:
-        words += pre_process(str(t))
+    print(text)
     
     print("===KEYWORDS===")
-    question = words[i]
-    print("{}".format(question))
+    words = pre_process(text)
+    print("{}".format(words[0]))
 
     model_name = 'data_corpus/' + model_name
     model = KeyedVectors.load_word2vec_format(model_name, binary=True)
     data_sim_words = []
     sim_words = []
     print("===VECTORS===")
-    for q in question:
+    for q in words[0]:
         try:
             vector = model.wv[q]
             voc = True
@@ -57,26 +42,18 @@ def test_data(text, model_name, i):
             data_sim_words += sim_words
 
     return data_sim_words
-    
-# class SearchToTicker(viewsets.ModelViewset):
 
-def test_comparison_data(keywords):
+# RETURN TICKER RECOMMENDATION BASED ON KEYWORD
+def test_ticker_recommender(keywords):
     # print(keywords)
     print("===TICKERS===")
     print('- recommendation tickers:')
     # keywords = keywords[:2]
     tickers = []
-    # queryset = NewsTickerKeyword.objects.filter(keyword__in=keywords).order_by('-ticker__ticker_news_rating__number_positive')
-    queryset = NewsTickerKeyword.objects.filter(keyword__in=keywords).distinct('ticker').values('ticker')
-    # queryset = queryset[:10]
-    # print(queryset)
-    for qs in queryset:
-        # print(qs)
-        tickers.append(qs['ticker'])
-    # print(tickers)
-    queryset2 = DroidUniverseNewsRating.objects.filter(ticker__in=tickers).order_by('-number_positive')
-    queryset2 = queryset2[:10]
-    for qs2 in queryset2:
-        print(qs2)
-
-
+    ticker_recommend = data_news_keywords(keywords)
+    if ticker_recommend != '':
+        ticker_recommend = tuple(ticker_recommend)
+        ticker_recommend = data_news_rank(ticker_recommend)
+        print(ticker_recommend[:10])
+    else:
+        print("there is no ticker recommendation")

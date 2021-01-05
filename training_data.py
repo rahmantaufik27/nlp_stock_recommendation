@@ -9,6 +9,7 @@ from gensim.models import translation_matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.corpus import stopwords
 from gensim.models.keyedvectors import WordEmbeddingsKeyedVectors
+from pre_processing import stopwords_key
 
 # WORD2VEC SKIP-GRAM MODEL
 def w2v_skip_gram(data):
