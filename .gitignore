@@ -1,3 +1,4 @@
 .env
 env/
 data_corpus/
+__pycache__/

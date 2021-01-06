@@ -2,6 +2,7 @@ import sys
 import nltk
 import string
 import pandas as pd
+import numpy as np
 import gensim.downloader as api
 from gensim.models import Word2Vec, KeyedVectors
 from gensim.test.utils import datapath
@@ -10,6 +11,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.corpus import stopwords
 from gensim.models.keyedvectors import WordEmbeddingsKeyedVectors
 from pre_processing import stopwords_key
+from textblob import TextBlob
 
 # WORD2VEC SKIP-GRAM MODEL
 def w2v_skip_gram(data):
@@ -21,7 +23,7 @@ def w2v_bow(data):
     model = Word2Vec(data, min_count=1, size=300, window=5, workers=4)
     return model
 
-# EXECUTE MODEL
+# EXECUTE WORDS EMBEDDING MODEL
 def create_model(data, model_name):
     model = w2v_skip_gram(data)
     # model_name1 = 'data_corpus/' + model_name + '.model'
@@ -61,6 +63,27 @@ def train_keyword(data):
 
     return df.head(10)
 
+# TRAINING DATA TO GET RANKING
+# training ranking use sentiment analysis (textblob tool)
+def training_sentiment(news):
+    df = pd.DataFrame(news, columns=['news'])
+    df['polarity'] = np.nan
+    df['subjectivity'] = np.nan
+    df['score'] = np.nan
+
+    for idx, n in enumerate(df['news']):
+        sent_analysis = TextBlob(n)
+        df['polarity'].iloc[idx] = sent_analysis.sentiment.polarity
+        df['subjectivity'].iloc[idx] = sent_analysis.sentiment.subjectivity
+        if sent_analysis.sentiment.polarity >= 0.05:
+            score1 = 'positive'
+        elif -0.05 < sent_analysis.sentiment.polarity < 0.05:
+            score1 = 'neutral'
+        else:
+            score1 = 'negative'
+        df['score'].iloc[idx] = score1   
+    return df
+
 # IF THE CORPUS WANT TO EXPANDED BY ANOTHER PRETRAINED
 def expanded_pretrained():
     # list of pretrained
@@ -73,3 +96,8 @@ def expanded_pretrained():
             out_data += fp.read()
     with open('data_corpus/pretrained_all.bin', 'wb') as fp:
         fp.write(out_data)
+
+# IF THE MODEL WANT TO BE REFORMATED
+def model_reformated(filename):
+    wv = KeyedVectors.load_word2vec_format(f"data_corpus/{filename}.bin", binary=True)
+    wv.save_word2vec_format(f"data_corpus/{filename}.txt", binary=False)

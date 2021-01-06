@@ -54,6 +54,6 @@ def test_ticker_recommender(keywords):
     if ticker_recommend != '':
         ticker_recommend = tuple(ticker_recommend)
         ticker_recommend = data_news_rank(ticker_recommend)
-        print(ticker_recommend[:10])
+        print(ticker_recommend[:5])
     else:
         print("there is no ticker recommendation")

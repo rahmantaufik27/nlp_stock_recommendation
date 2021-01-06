@@ -43,7 +43,7 @@ def stopwords_key():
 
 def remove_wordstop(words):
     # remove words listed on stopwords
-    stop = stopwords_fin()
+    stop = stopwords_key()
     stop = stop.splitlines()
     stop = str(stop)
     stop = stop.translate(str.maketrans('', '', string.punctuation))
