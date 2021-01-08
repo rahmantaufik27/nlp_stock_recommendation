@@ -190,7 +190,9 @@ have
 haven't
 having
 he
+heads
 he's
+held
 hello
 help
 hence
@@ -365,6 +367,7 @@ r
 rather
 rd
 re
+reached
 really
 reasonably
 regarding

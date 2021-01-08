@@ -23,10 +23,11 @@ if __name__ == '__main__':
     if args.train_model:
         # import data first
         ticker_list = data_ticker()
+        # ticker_list = ['AAPL.O', 'JPM']
         ticker_list = tuple(ticker_list)
         raw_data = []
         raw_data += data_ticker_news(ticker_list)
-        # raw_data += data_ticker_des(ticker_list)
+        raw_data += data_ticker_des(ticker_list)
 
         if args.train_ranking:
             # training sentiment for news ranking
@@ -39,7 +40,7 @@ if __name__ == '__main__':
             doc_new = []
 
             # pre-processing the data (including cleaning, tokenizing, remove stopwords, etc.)
-            for i, doc  in tqdm(enumerate(doc_old[:15000])):
+            for i, doc  in tqdm(enumerate(doc_old)):
                 # pbar.set_description("requesting for : %s" % i)
                 doc_new += pre_process(doc)
 
@@ -64,7 +65,9 @@ if __name__ == '__main__':
         ]
 
         # get words embedding from one of question
-        search_this = test_data(question[1], 'asklora_mega_corpus.bin')
+        biner = True
+        number = 2
+        search_this = test_data(question[number], 'asklora_mega_corpus.bin', biner)
         print(search_this)
         keys = []
 

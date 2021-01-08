@@ -12,7 +12,7 @@ from pre_processing import pre_process
 from dataset import data_news_keywords, data_news_rank
 
 # RETURN KEYWORD AND VECTORS FROM QUESTION
-def test_data(text, model_name):
+def test_data(text, model_name, biner):
     print("===SEARCH===")
     print(text)
     
@@ -21,7 +21,7 @@ def test_data(text, model_name):
     print("{}".format(words[0]))
 
     model_name = 'data_corpus/' + model_name
-    model = KeyedVectors.load_word2vec_format(model_name, binary=True)
+    model = KeyedVectors.load_word2vec_format(model_name, binary=biner)
     data_sim_words = []
     sim_words = []
     print("===VECTORS===")

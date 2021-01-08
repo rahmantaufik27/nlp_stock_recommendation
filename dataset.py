@@ -98,13 +98,13 @@ def data_news_keywords(keywords):
 def data_news_rank(ticker_list):
     try:
         engine = create_engine(os.getenv("DBURL"))
-        query = f"SELECT ticker FROM news_ticker_rating WHERE ticker IN {ticker_list} ORDER BY number_positive DESC"
+        query = f"SELECT n.ticker, du.ticker_name FROM news_ticker_rating as n INNER JOIN droid_universe as du ON n.ticker=du.ticker WHERE n.ticker IN {ticker_list} ORDER BY number_positive DESC"
         with engine.connect() as conn:
             ResultProxy = conn.execute(query)
             ResultSet = ResultProxy.fetchall()
         engine.dispose()
         df = pd.DataFrame(ResultSet)
-        df.columns = ["ticker"]
+        df.columns = ["ticker", "company"]
     except:
         df = ''
     return df

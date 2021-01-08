@@ -43,7 +43,7 @@ def train_data(data, model_name):
     print("training data is done")
 
 # TRAINING DATA TO GET KEYWORDS
-# training news per each tickers using TF-IDF
+# training news per each tickers using TF-IDF2
 # the result is list of important keywords and vectors for each ticker
 def train_keyword(data):
     stop = stopwords_key()
